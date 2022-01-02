@@ -4,35 +4,39 @@ class Penilaian extends CI_Controller {
     public function __construct()
     {
 		parent::__construct();
-		$this->load->model('Penilaian_model');
+        	$this->load->model('auth_model');
+		if(!$this->auth_model->current_user()){
+			redirect('auth/login');
+		}
+		$this->load->model('penilaian_model');
         $this->load->model('nilaikriteria_model');
         $this->load->model('kriteria_model');
+        $this->load->model('ca_model');
 		
 	}
 
    public function index()
 	{
         $data['dataKriteria'] = $this->kriteria_model->getDataKriteria();
+        $data['current_user'] = $this->auth_model->current_user();
        $this->load->view('admin/penilaian', $data);
 	}
 
-   public function dataBobot()
+   public function dataNilai()
     {
         
-        $dataKriteria = $this->Penilaian_model->getDataBobot();
+        $dataNilai = $this->penilaian_model->getDataNilai();
         $no =1;
-        foreach ($dataKriteria as  $value) {
+        foreach ($dataNilai as  $value) {
             $tbody = array();
             $tbody[] = $no++;
-            $tbody[] = $value['namaKriteria'];
-            $tbody[] = $value['bobot'] * 100 .'%';
-            $tbody[] = $value['bobot'];
-            $aksi= "<button class='btn btn-primary ubah-nilai-bobot' data-toggle='modal' data-id=".$value['id_bobotkriteria'].">Ubah</button>";
+            $tbody[] = $value['nama_calon_anggota'];
+            $aksi= "<button class='btn btn-primary ubah-nilai' data-toggle='modal' data-id=".$value['id_calon_anggota'].">Ubah</button>".' '."<button class='btn btn-danger hapus-nilai' id='id' data-toggle='modal' data-id=".$value['id_calon_anggota'].">Hapus</button>";;
             $tbody[] = $aksi;
             $data[] = $tbody; 
         }
 
-        if ($dataKriteria) {
+        if ($dataNilai) {
             echo json_encode(array('data'=> $data));
         }else{
             echo json_encode(array('data'=>0));
@@ -41,28 +45,19 @@ class Penilaian extends CI_Controller {
 
     public function add()
     {
-        $id_kriteria = $this->input->post('id_kriteria');
+      
 
-        // $tambahKriteria = array (
-        //     'id_calon_anggota'=>$this->input->post('id_calon_anggota'),
-        //     'id_kriteria' => $this->input->post('id_kriteria'),
-        //     'id_nilaikriteria' => $this->input->post('id_nilaikriteria')
-        // );
+        $tambahKriteria = array (
+            'id_calon_anggota'=>$this->input->post('id_calon_anggota'),
+            'id_kriteria' => $this->input->post('id_kriteria'),
+            'id_nilaikriteria' => $this->input->post('id_nilaikriteria')
+        );
 
-        echo $id_kriteria;
+       
 
-        // $data = $this->kriteria_model->save($tambahKriteria);
-        // $insertId = $this->db->insert_id();
+        $data = $this->penilaian_model->save($tambahKriteria);
 
-        //  $tambahBobot = array (
-        //     'id_kriteria'=>$insertId,
-        //     'bobot' => 0
-        //  );
-
-        //  $saveBobot = $this->bobot_model->save($tambahBobot);
-
-
-        // echo json_encode($data);
+        echo json_encode($data);
     }
 
    public function formedit()
@@ -70,19 +65,23 @@ class Penilaian extends CI_Controller {
         // id yang telah diparsing pada ajax ajaxcrud.php data{id:id}
         $id = $this->input->post('id');
 
-        $data['dataBobot'] = $this->Penilaian_model->dataBobotedit($id);
-        $this->load->view('admin/formEditBobot',$data);
+        $data['dataNilai'] = $this->penilaian_model->dataNilaiEdit($id);
+        $data['dataAnggota'] = $this->ca_model->dataCalonAnggotaedit($id);
+        $data['dataKriteria'] = $this->kriteria_model->getDataKriteria();
+        $this->load->view('admin/formEditNilaiCalonAnggota',$data);
     }
 
-	public function ubahDataBobot()
+	public function ubahDataNilai()
     {
-       $bobot = $this->input->post('bobot') / 100;
-        $objdata = array(
-            'bobot'=> $bobot,
+         $updateData = array (
+            'id_calon_anggota'=>$this->input->post('id_calon_anggota'),
+            'id_kriteria' => $this->input->post('id_kriteria'),
+            'id_nilaikriteria' => $this->input->post('id_nilaikriteria')
         );
 
-        $id = $this->input->post('id');
-        $data = $this->Penilaian_model->ubahDataBobot($objdata,$id);
+        $id = $this->input->post('id_calon_anggota');
+        $id_kriteria = $this->input->post('id_kriteria');
+        $data = $this->penilaian_model->ubahDataNilai($updateData,$id, $id_kriteria);
 
         echo json_encode($data);
     }
@@ -92,7 +91,7 @@ class Penilaian extends CI_Controller {
          // id yang telah diparsing pada ajax ajaxcrud.php data{id:id}
          $id = $this->input->post('id');
 
-         $data = $this->Penilaian_model->hapusDataKriteria($id);
+         $data = $this->penilaian_model->hapusDataKriteria($id);
          echo json_encode($data);
     }
 

@@ -4,14 +4,18 @@ class Kriteria extends CI_Controller {
     public function __construct()
     {
 		parent::__construct();
+        $this->load->model('auth_model');
+        if(!$this->auth_model->current_user()){
+        redirect('auth/login');
+        }
 		$this->load->model('kriteria_model');
         $this->load->model('bobot_model');
 	}
 
 	public function index()
 	{
-    
-        $this->load->view('admin/kriteria_view');
+        $data['current_user'] = $this->auth_model->current_user();
+        $this->load->view('admin/kriteria_view', $data);
 	}
 
 	//tampilkan data kriteria
@@ -24,6 +28,7 @@ class Kriteria extends CI_Controller {
             $tbody = array();
             $tbody[] = $no++;
             $tbody[] = $value['namaKriteria'];
+            $tbody[] = $value['sifat'];
             $aksi= "<button class='btn btn-primary ubah-kriteria' data-toggle='modal' data-id=".$value['id_kriteria'].">Ubah</button>".' '."<button class='btn btn-danger hapus-kriteria' id='id' data-toggle='modal' data-id=".$value['id_kriteria'].">Hapus</button>";
             $tbody[] = $aksi;
             $data[] = $tbody; 
@@ -48,9 +53,11 @@ class Kriteria extends CI_Controller {
 	public function add()
     {
         $nama = $this->input->post('nama'); 
+        $sifat = $this->input->post('sifat');
 
         $tambahKriteria = array (
             'namaKriteria'=>$nama,
+            'sifat' =>$sifat
         );
 
         $data = $this->kriteria_model->save($tambahKriteria);
@@ -80,6 +87,7 @@ class Kriteria extends CI_Controller {
     {
         $objdata = array(
             'namaKriteria'=>$this->input->post('editnama'),
+            'sifat'=>$this->input->post('editsifat'),
         );
 
         $id = $this->input->post('id');

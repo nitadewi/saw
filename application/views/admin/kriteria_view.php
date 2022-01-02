@@ -19,6 +19,20 @@
                                                             
                                                             </div>
                                                        </div>
+                                                        <div class="form-group row">
+                                                            <label class="col-form-label">Sifat</label>
+                                                            <div class="col-sm-12">
+                                                                 <select id= "sifat" class="form-control" name="sifat" required>
+                                                                      <option selected="true" disabled="disabled"> Pilih Sifat
+                                                                      </option>
+                                                                       <option value="benefit"> benefit
+                                                                      </option>
+                                                                       <option value="cost"> cost
+                                                                      </option>
+                                                                 </select>
+                                                            
+                                                            </div>
+                                                       </div>
                                                        <div class="form-group row">
                                                             <div class="col-sm-12">
                                                                  <button type="submit" class="btn btn-primary">Tambah</button>
@@ -155,6 +169,7 @@
                 columns: [
                     { title: "No" , "width": "10%" },
                     { title: "Nama", "width": "70%" },
+                    { title: "Sifat", "width": "70%" },
                     { title: "Aksi", "width": "20%" },
                ],
 
@@ -212,6 +227,7 @@
           //tambah data kriteria
           $('#tambahKriteria').on('submit', function () {
                var nama = $('#namaKriteria').val(); // diambil dari id nama yang ada diform modal
+                var sifat = $('#sifat').val();
               
                $.ajax({
                type: "post",
@@ -225,7 +241,8 @@
                     }
                     })      
                },
-               data: {nama:nama}, // ambil datanya dari form yang ada di variabel
+               data: {nama:nama,
+               sifat:sifat}, // ambil datanya dari form yang ada di variabel
                dataType: "JSON",
                success: function (data) {
                dataKriteria.ajax.reload(null,false);
@@ -269,7 +286,8 @@
                      // proses untuk mengubah data
                      $('#formeditKriteria').on('submit', function () {
                     var editnama = $('#editnamaKriteria').val(); // diambil dari id nama yang ada diform modal
-                    var id = $('#idKriteria').val(); //diambil dari id yang ada di form modal
+                    var id = $('#idKriteria').val();
+                    var editsifat = $('#editsifat').val()  //diambil dari id yang ada di form modal
                     $.ajax({
                       type: "post",
                       url: "<?=base_url('index.php/admin/kriteria/ubahDataKriteria')?>",
@@ -283,6 +301,7 @@
                           })      
                         },
                       data: {editnama:editnama,
+                         editsifat: editsifat,
                          id:id}, // ambil datanya dari form yang ada di variabel
                     success: function (data) {
                     dataKriteria.ajax.reload(null,false);

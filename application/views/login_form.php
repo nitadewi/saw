@@ -48,29 +48,42 @@
                 <div class="card-header pb-0 text-left bg-transparent">
                   <h3 class="font-weight-bolder text-info text-gradient">Selamat Datang</h3>
                   <p class="mb-0">Enter your email and password to sign in</p>
+                  <?php if($this->session->flashdata('message_login_error')): ?>
+                    <div class="invalid-feedback">
+                        <?= $this->session->flashdata('message_login_error') ?>
+                    </div>
+                  <?php endif ?>
                 </div>
                 <div class="card-body">
-                  <form role="form">
-                    <label>Email</label>
+                  <form role="form" method="POST">
+                    <label>username</label>
                     <div class="mb-3">
-                      <input type="email" class="form-control" placeholder="Email" aria-label="Email" aria-describedby="email-addon">
+                      <input type="text" class="form-control" name="username" class="<?= form_error('username') ? 'invalid' : '' ?>" placeholder="username" aria-label="username" aria-describedby="email-addon">
+                      <div class="invalid-feedback">
+                        <?= form_error('username') ?>
+                      </div>
                     </div>
+
                     <label>Password</label>
                     <div class="mb-3">
-                      <input type="email" class="form-control" placeholder="Password" aria-label="Password" aria-describedby="password-addon">
+                      <input type="password" class="form-control" name="password" class="<?= form_error('password') ? 'invalid' : '' ?>" placeholder="Password" aria-label="Password" aria-describedby="password-addon">
+                    <div class="invalid-feedback">
+                      <?= form_error('password') ?>
+                    </div>
+                    
                     </div>
                    
                     <div class="text-center">
-                      <button type="button" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign in</button>
+                      <button type="submit" class="btn bg-gradient-info w-100 mt-4 mb-0">Sign in</button>
                     </div>
                   </form>
                 </div>
                 
               </div>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-8">
               <div class="oblique position-absolute top-0 h-100 d-md-block d-none me-n8">
-                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n5" style="background-image:url('../assets/img/curved-images/undraw_goal_-0-v5v.svg')"></div>
+                <div class="oblique-image bg-cover position-absolute fixed-top ms-auto h-100 z-index-0 ms-n5" style="background-image:url( <?php echo base_url ('/assets/img/curved-images/undraw_goal_-0-v5v.svg') ?>)"></div>
               </div>
             </div>
           </div>

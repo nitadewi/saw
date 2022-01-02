@@ -35,7 +35,10 @@ class Ca_model extends CI_Model
 
     public function save($data)
     {
-        return $this->db->insert($this->_table, $data);
+         $this->db->where('nama_calon_anggota',$data);
+        
+
+        // return $this->db->insert($this->_table, $data);
     }
 
     public function dataCalonAnggotaedit($id)

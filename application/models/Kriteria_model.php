@@ -45,6 +45,17 @@ class Kriteria_model extends CI_Model
     public function hapusDataKriteria($id)
     {
         $this->db->where('id_kriteria',$id);
+        $query = $this->db->delete($this->_table);
+        if($query) {
+            $this->db->where('id_kriteria',$id);
+            $query2 = $this->db->delete('nilai_kriteria');
+            if($query2){
+                 $this->db->where('id_kriteria',$id);
+                 $query2 = $this->db->delete('bobot_kriteria');
+            }
+
+        }
+        
         return $this->db->delete($this->_table);
         
     }

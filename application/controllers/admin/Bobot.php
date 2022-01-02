@@ -4,6 +4,10 @@ class Bobot extends CI_Controller {
     public function __construct()
     {
 		parent::__construct();
+        $this->load->model('auth_model');
+		if(!$this->auth_model->current_user()){
+			redirect('auth/login');
+		}
 		$this->load->model('bobot_model');
 		
 	}
@@ -11,6 +15,7 @@ class Bobot extends CI_Controller {
    public function index()
 	{
         $data['bobot'] = $this->bobot_model->getDataBobot();
+        $data['current_user'] = $this->auth_model->current_user();
        $this->load->view('admin/bobot', $data);
 	}
 
@@ -23,7 +28,6 @@ class Bobot extends CI_Controller {
             $tbody = array();
             $tbody[] = $no++;
             $tbody[] = $value['namaKriteria'];
-            $tbody[] = $value['bobot'] * 100 .'%';
             $tbody[] = $value['bobot'];
             $aksi= "<button class='btn btn-primary ubah-nilai-bobot' data-toggle='modal' data-id=".$value['id_bobotkriteria'].">Ubah</button>";
             $tbody[] = $aksi;
@@ -48,7 +52,7 @@ class Bobot extends CI_Controller {
 
 	public function ubahDataBobot()
     {
-       $bobot = $this->input->post('bobot') / 100;
+       $bobot = $this->input->post('bobot');
         $objdata = array(
             'bobot'=> $bobot,
         );

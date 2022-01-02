@@ -34,7 +34,7 @@ class NilaiKriteria extends CI_Controller {
     {
         $id = $this->input->post('id'); 
         $nilai = $this->input->post('nilai');
-        $keterangan = $this->input->post('keterangan');
+        $keterangan = ucwords($this->input->post('keterangan'));
 
         $tambahsubKriteria = array (
             'id_kriteria'=>$id,

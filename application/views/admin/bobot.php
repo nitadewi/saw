@@ -38,18 +38,14 @@
      $(document).ready(function() {
           var dataBobotKriteria = $('#dataBobotKriteria').DataTable({
                 "processing": true,
-                "ajax": "<?=base_url("index.php/admin/bobot/dataBobot")?>",
+                "ajax": "<?=base_url("/admin/bobot/dataBobot")?>",
                 stateSave: true,
                 columns: [
                     { title: "No" , "width": "10%" },
                     { title: "Kriteria", "width": "50%" },
-                    { title: "Bobot", "width": "10%" },
-                    { title: "Bobot", "width": "10%" },
+                    { title: "Bobot", "width": "20%" },
                     { title: "Aksi", "width": "20%" },
-               ],
-
-               "iDisplayLength": 4,
-               "aLengthMenu": [[4], [4]]
+               ]
           })
 
 
@@ -60,7 +56,7 @@
                
                $.ajax({
                type: "post",
-               url: "<?=base_url('index.php/admin/bobot/formedit')?>",
+               url: "<?=base_url('/admin/bobot/formedit')?>",
                beforeSend :function () {
                     swal.fire({
                          title: 'Menunggu',
@@ -84,7 +80,7 @@
                     var bobot = $('#editbobot').val();
                     $.ajax({
                       type: "post",
-                      url: "<?=base_url('index.php/admin/bobot/ubahDataBobot')?>",
+                      url: "<?=base_url('/admin/bobot/ubahDataBobot')?>",
                       beforeSend :function () {
                         swal.fire({
                             title: 'Menunggu',
